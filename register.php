@@ -29,16 +29,9 @@
           <div class="card col-lg-4 mx-auto">
             <div class="card-body px-5 py-5">
               <h3 class="card-title text-left mb-3">Register</h3>
-              <?php
-                if(isset($_SESSION['error'])) {
-              ?>
-                <div class="alert alert-danger" role="alert">
-                  <?php echo $_SESSION['error']; ?>
-                </div>
-              <?php
-                unset($_SESSION['error']); // Unset/Removes the error variable from the session array
-                }
-              ?> 
+              
+              <?php include 'includes/alert.php'; ?>
+              
               <form action="register.php" method="POST">
                 <div class="form-group">
                   <label>Username</label>
