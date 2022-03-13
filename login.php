@@ -1,33 +1,53 @@
 <?php include 'includes/header.php'; ?>
 <?php
-if(isset($_POST['username']) && isset($_POST['password'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  
-  $checkUserQuery = "SELECT * FROM `users` WHERE (`username` = '$username' OR `email` = '$username')";
-  $result = mysqli_query($conn, $checkUserQuery);
+//Checks whether the input fields are empty or not
+if(isset($_POST['email']) && isset($_POST['password'])) {
+  $email = $_POST['email'];
+  $password = md5(sha1($_POST['password']));
+
+  $query = "SELECT * FROM users WHERE `email` = '$email' AND `password` = '$password'";
+  $result = mysqli_query($conn, $query);
+  //Checks whether the provided cred/user exists in DB or not
   if(mysqli_num_rows($result) > 0) {
-    // Next we check if the given password matches the record in the database
     $user = mysqli_fetch_assoc($result);
-    // echo "<pre>";
-    // var_dump($user);
-    // echo "PASSWORD: " . md5(sha1($password));
-    // die;
-    // md5(sha1($password)); -> Encryption
-
-    if($user['password'] == md5(sha1($password))) {
-      //if password and email is correct, redirect the user to index page
-      header('location: index.php');
-    } else {
-      //if password is wrong, show err msg
-      $_SESSION['error'] = "Sorry, the credential you've provided is wrong!";
-    }
-
+    $_SESSION['userId'] = $user['id'];
+    $_SESSION['userName'] = $user['username'];
+    header('location: index.php');
   } else {
-    //false
-    $_SESSION['error'] = "Sorry, Username/Email doesn't exist!";
+    // Return some sort of error
+    echo "Sorry, the credentials are wrong!";
   }
 }
+
+
+// if(isset($_POST['email']) && isset($_POST['password'])) {
+//   $email = $_POST['email'];
+//   $password = $_POST['password'];
+  
+//   $checkUserQuery = "SELECT * FROM `users` WHERE (`email` = '$email' OR `email` = '$username')";
+//   $result = mysqli_query($conn, $checkUserQuery);
+//   if(mysqli_num_rows($result) > 0) {
+//     // Next we check if the given password matches the record in the database
+//     $user = mysqli_fetch_assoc($result);
+//     // echo "<pre>";
+//     // var_dump($user);
+//     // echo "PASSWORD: " . md5(sha1($password));
+//     // die;
+//     // md5(sha1($password)); -> Encryption
+
+//     if($user['email'] == md5(sha1($password))) {
+//       //if password and email is correct, redirect the user to index page
+//       header('location: index.php');
+//     } else {
+//       //if password is wrong, show err msg
+//       $_SESSION['error'] = "Sorry, the credential you've provided is wrong!";
+//     }
+
+//   } else {
+//     //false
+//     $_SESSION['error'] = "Sorry, Username/Email doesn't exist!";
+//   }
+// }
 
 ?>
   <div class="container-scroller">
@@ -42,8 +62,8 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 
               <form action="" method="POST">
                 <div class="form-group">
-                  <label>Username or email *</label>
-                  <input type="text" name="username" class="form-control p_input" required>
+                  <label>Email *</label>
+                  <input type="email" name="email" class="form-control p_input" required>
                 </div>
                 <div class="form-group">
                   <label>Password *</label>

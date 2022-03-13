@@ -22,6 +22,14 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png" />
   </head>
+  <?php
+  session_start();
+  var_dump($_SESSION);
+  // die;
+  if(!isset($_SESSION['userId']) && !isset($_SESSION['userName'])) {
+    header('location: login.php');
+  }
+  ?>
   <body>
     <div class="container-scroller">
       <div class="row p-0 m-0 proBanner" id="proBanner">
@@ -57,7 +65,7 @@
                   <span class="count bg-success"></span>
                 </div>
                 <div class="profile-name">
-                  <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                  <h5 class="mb-0 font-weight-normal"><?php echo $_SESSION['userName']; ?></h5>
                   <span>Gold Member</span>
                 </div>
               </div>
@@ -366,9 +374,11 @@
                         <i class="mdi mdi-logout text-danger"></i>
                       </div>
                     </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Log out</p>
-                    </div>
+                    <form action="logout.php" method="POST">
+                      <div class="preview-item-content">
+                        <button class="preview-subject mb-1" type="submit">Log out</button>
+                      </div>
+                    </form>
                   </a>
                   <div class="dropdown-divider"></div>
                   <p class="p-3 mb-0 text-center">Advanced settings</p>
